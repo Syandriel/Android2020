@@ -62,7 +62,7 @@ public class Control : MonoBehaviour {
 
         int closestFinger = 0;
         Vector3 touchPosition = Vector3.zero;
-        float distanceToJoystick = Single.MaxValue;
+        float distanceToJoystick = float.MaxValue;
 
         foreach (Touch touch in Input.touches) {
             if (touch.phase == TouchPhase.Began) {
@@ -79,21 +79,22 @@ public class Control : MonoBehaviour {
         }
 
         if (Input.touchCount > 0) {
-        TouchPhase touchPhase = Input.GetTouch(closestFinger).phase;
-        if (touchPhase != TouchPhase.Began) {
-            pointA = Camera.main.ScreenToWorldPoint(new Vector3(Input.touches[closestFinger].position.x, Input.touches[closestFinger].position.y, Camera.main.transform.position.z));
-            if (pointA.x < 0) {
-                outerJoystick.transform.position = pointA;
+            TouchPhase touchPhase = Input.GetTouch(closestFinger).phase;
+            if (touchPhase == TouchPhase.Began) {
+                pointA = Camera.main.ScreenToWorldPoint(new Vector3(Input.touches[closestFinger].position.x, Input.touches[closestFinger].position.y, Camera.main.transform.position.z));
+                if (pointA.x < 0) {
+                    outerJoystick.transform.position = pointA;
+                }
             }
-        } else if (touchPhase == TouchPhase.Moved) {
-            touchStart = true;
-            pointB = Camera.main.ScreenToWorldPoint(new Vector3(Input.touches[closestFinger].position.x, Input.touches[closestFinger].position.y, Camera.main.transform.position.z));
-        } else {
-            touchStart = false;
-            outerJoystick.transform.position = startA;
-            innerJoystick.transform.position = startA;
+            if (touchPhase == TouchPhase.Moved) {
+                touchStart = true;
+                pointB = Camera.main.ScreenToWorldPoint(new Vector3(Input.touches[closestFinger].position.x, Input.touches[closestFinger].position.y, Camera.main.transform.position.z));
+            } else {
+                touchStart = false;
+                outerJoystick.transform.position = startA;
+                innerJoystick.transform.position = startA;
+            }
         }
-    }
 #else //PC-Seite
 
 #endif
