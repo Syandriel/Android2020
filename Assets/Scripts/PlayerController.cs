@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour  {
     void Update() { //update werte
         //jump = Input.GetAxis("Jump");
         float moveHorizontal = Input.GetAxis("Horizontal");
-        Debug.Log(moveHorizontal);
+        //Debug.Log(moveHorizontal);
         //moveVelocity = new Vector2(moveHorizontal, 0);
     }
 
