@@ -24,7 +24,7 @@ public class FollowCamera : MonoBehaviour {
         float refVelocity = 0f;
 
         float targetedSize = Mathf.Lerp(startSize, zoomedSize, velocityZoom);
-        Debug.Log(velocityZoom);
+        //Debug.Log(velocityZoom);
         Camera.main.orthographicSize = Mathf.SmoothDamp(Camera.main.orthographicSize, targetedSize, ref refVelocity, smoothZoomSpeed);
 
         Vector3 cameraCenter = transform.position;
@@ -35,29 +35,6 @@ public class FollowCamera : MonoBehaviour {
         Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, targetPostion, ref velocity, smoothSpeed);
         transform.position = smoothedPosition;
 
-    }
-
-    private void OnDrawGizmos() {
-        DrawEllipse(transform.position - offset, transform.forward, transform.up, maxDistanceAwayX * transform.localScale.x, maxDistanceAwayY * transform.localScale.y, 32, Color.red);
-    }
-
-    private static void DrawEllipse(Vector3 pos, Vector3 forward, Vector3 up, float radiusX, float radiusY, int segments, Color color, float duration = 0) {
-        float angle = 0f;
-        Quaternion rot = Quaternion.LookRotation(forward, up);
-        Vector3 lastPoint = Vector3.zero;
-        Vector3 thisPoint = Vector3.zero;
-
-        for (int i = 0; i < segments + 1; i++) {
-            thisPoint.x = Mathf.Sin(Mathf.Deg2Rad * angle) * radiusX;
-            thisPoint.y = Mathf.Cos(Mathf.Deg2Rad * angle) * radiusY;
-
-            if (i > 0) {
-                Debug.DrawLine(rot * lastPoint + pos, rot * thisPoint + pos, color, duration);
-            }
-
-            lastPoint = thisPoint;
-            angle += 360f / segments;
-        }
     }
 
 }

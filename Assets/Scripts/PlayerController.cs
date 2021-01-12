@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour  {
             moveX = max_speed;
         }
 
-        if (wasGrounded)
+        //if (wasGrounded)
             body.velocity = new Vector2(moveX * accl*10, moveY);
     }
 
