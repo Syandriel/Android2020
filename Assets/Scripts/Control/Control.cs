@@ -10,8 +10,8 @@ public class Control : MonoBehaviour {
     public Transform player;
     public PlayerController playerController;
 
-    public Transform outerJoystick;
-    public Transform innerJoystick;
+    public Transform left;
+    public Transform right;
 
     public Canvas control;
     public Button attack;
@@ -31,13 +31,15 @@ public class Control : MonoBehaviour {
 
     private Text debugText;
 
+    private bool emergency = true;
+
     // Start is called before the first frame update
     void Start() {
 
         debugText = GameObject.FindObjectOfType<Text>();
 
-#if (UNITY_ANDROID || UNITY_IOS) //Handy-Seite
-        startA = outerJoystick.transform.position;
+#if ((UNITY_ANDROID || UNITY_IOS)) //Handy-Seite
+        startA = outerJoystick.position;
 
         attack.onClick.AddListener(Attack);
         special.onClick.AddListener(Special);
@@ -59,7 +61,7 @@ public class Control : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
-#if (UNITY_ANDROID || UNITY_IOS) //Handy-Seite
+#if ((UNITY_ANDROID || UNITY_IOS)) //Handy-Seite
 
         int closestFinger = 0;
         Vector3 touchPosition = Vector3.zero;
@@ -117,9 +119,9 @@ public class Control : MonoBehaviour {
 
     // FixedUpdate is called every physics update
     void FixedUpdate() {
-#if (UNITY_ANDROID || UNITY_IOS) //Handy-Seite
-        if (touchStart && pointA.x < 0) {
-            Vector2 offset = pointB - pointA;
+#if ((UNITY_ANDROID || UNITY_IOS)) //Handy-Seite
+        if (touchStart) {
+            Vector2 offset = pointB - startA;
             Vector2 direction = Vector2.ClampMagnitude(offset, clampDistance);
 
             MoveCharacter(direction);
