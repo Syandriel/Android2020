@@ -30,7 +30,7 @@ public class UpDownButton : Selectable, IPointerDownHandler, IPointerUpHandler {
         set {m_OnButtonUp = value; }
     }
 
-    public virtual void OnPointerDown(PointerEventData eventData) {
+    public override void OnPointerDown(PointerEventData eventData) {
 
         if(eventData.button != PointerEventData.InputButton.Left) 
             return;
@@ -42,7 +42,7 @@ public class UpDownButton : Selectable, IPointerDownHandler, IPointerUpHandler {
         m_OnButtonDown.Invoke();
     }
 
-    public virtual void OnPointerUp(PointerEventData eventData) {
+    public override void OnPointerUp(PointerEventData eventData) {
         
         if (eventData.button != PointerEventData.InputButton.Left)
             return;
