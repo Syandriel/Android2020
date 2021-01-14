@@ -11,10 +11,10 @@ public class PlayerController : MonoBehaviour  {
     bool wasGrounded = false;
     
     
-    public Component GroundTrigger;
+    public Component groundTrigger;
     public LayerMask whatIsGround;
     
-	private float jump;
+    private float jump;
 
     private Rigidbody2D body;
     private Vector2 moveVelocity;
@@ -25,21 +25,22 @@ public class PlayerController : MonoBehaviour  {
     }
 
     void Update() { //update werte
-		jump = Input.GetAxis("Jump");
-		float moveHorizontal = Input.GetAxis("Horizontal");
-        moveVelocity = new Vector2(moveHorizontal, 0);
+        //jump = Input.GetAxis("Jump");
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        //Debug.Log(moveHorizontal);
+        //moveVelocity = new Vector2(moveHorizontal, 0);
     }
 
     void FixedUpdate() {//physics
         //----------------
         wasGrounded = false;
-        Collider2D[] collders = Physics2D.OverlapCircleAll(GroundTrigger.transform.position, .1F, whatIsGround);
+        Collider2D[] collders = Physics2D.OverlapCircleAll(groundTrigger.transform.position, .1F, whatIsGround);
         for (int i = 0; i < collders.Length; i++) {
             if (collders[i].gameObject != gameObject) {
                 wasGrounded = true;
             }
         }
-        
+
         if((jump == 1) && wasGrounded){
             body.AddForce(new Vector2(0, 100 * jumpForce));
         }
@@ -54,7 +55,29 @@ public class PlayerController : MonoBehaviour  {
 
         if (wasGrounded)
             body.velocity = new Vector2(moveX * accl*10, moveY);
+    }
 
+    void InputMovement(Vector2 movement) {
+        moveVelocity = movement;
+    }
+
+    void Attack() {
+        //Debug.Log("Attack in PlayerController");
+    }
+
+    void Special() {
+
+        //Debug.Log("Special in PlayerController");
+    }
+
+    void Grab() {
+        //Debug.Log("Grab in PlayerController");
+    }
+
+    void Jump(float value) {
+        //Debug.Log("Jump: " + value);
+        //Debug.Log("was Grounded: " + wasGrounded);
+        jump = value;
     }
 
 }
