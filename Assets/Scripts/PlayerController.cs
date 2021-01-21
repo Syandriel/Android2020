@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour  {
     private Rigidbody2D body;
     private Vector2 moveVelocity;
     private bool isJumping = false;
+    private bool oneJump = true;
 
     void Start() {
         body = this.gameObject.GetComponent<Rigidbody2D>();
@@ -31,6 +33,12 @@ public class PlayerController : MonoBehaviour  {
         //moveVelocity = new Vector2(moveHorizontal, 0);
     }
 
+
+    private bool notMoving() {
+        return (body.velocity.y == 0 && body.velocity.x == 0);
+    }
+    
+    
     void FixedUpdate() {//physics
         //----------------
         wasGrounded = false;
@@ -40,9 +48,19 @@ public class PlayerController : MonoBehaviour  {
                 wasGrounded = true;
             }
         }
+        
+        if((jump == 1) && (wasGrounded || (!wasGrounded && notMoving()&&oneJump))){
+            if (!wasGrounded && notMoving()) { //walljump
 
-        if((jump == 1) && wasGrounded){
-            body.AddForce(new Vector2(0, 100 * jumpForce));
+                float xcord = body.position.x;
+                body.AddForce(new Vector2(100*jumpForce, 50 * jumpForce));
+                if (body.position.x.Equals(xcord)) {
+                    body.AddForce(new Vector2(-100*jumpForce, 50 * jumpForce));
+                }
+                oneJump = false;
+            } else { 
+                body.AddForce(new Vector2(0, 100 * jumpForce));  
+            }
         }
         //--------------
 
@@ -53,6 +71,10 @@ public class PlayerController : MonoBehaviour  {
             moveX = max_speed;
         }
 
+        if (wasGrounded)
+            oneJump = true;
+        
+        
         //if (wasGrounded)
             body.velocity = new Vector2(moveX * accl*10, moveY);
     }
@@ -75,8 +97,8 @@ public class PlayerController : MonoBehaviour  {
     }
 
     void Jump(float value) {
-        //Debug.Log("Jump: " + value);
-        //Debug.Log("was Grounded: " + wasGrounded);
+        Debug.Log("Jump: " + value);
+        Debug.Log("was Grounded: " + wasGrounded);
         jump = value;
     }
 
