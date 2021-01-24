@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 
-public class Control : MonoBehaviour {
+public class Control : NetworkBehaviour {
 
-    public Transform player;
+    //public Transform player;
     public PlayerController playerController;
 
     public Canvas control;
@@ -29,11 +30,12 @@ public class Control : MonoBehaviour {
     //private Vector2 startA;
     //private Vector2 touch;
 
-    //private Text debugText;
+    [SerializeField] private Text debugText;
 
     //private bool emergency = true;
 
     // Start is called before the first frame update
+    [Client]
     void Start() {
 
         //debugText = GameObject.FindObjectOfType<Text>();
@@ -65,74 +67,116 @@ public class Control : MonoBehaviour {
     }
 
     // Update is called once per frame
+    [Client]
     void Update() {
+        
+        
 
     }
 
     // FixedUpdate is called every physics update
+    [Client]
     void FixedUpdate() {
+        if (playerController != null)
+            debugText.text = playerController.ToString();
 #if (!(UNITY_ANDROID || UNITY_IOS)) //Handy-Seite
-        MoveCharacter(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
+        /*if (!playerController.hasAuthority)
+        {
+            return;
+        }*/
+        if (playerController != null)
+        {
+            MoveCharacter(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
 
-        if(Input.GetAxis("Jump") > 0) {
-            StartJump();
-        } else {
-            StopJump();
+            if (Input.GetAxis("Jump") > 0)
+            {
+                StartJump();
+            }
+            else
+            {
+                StopJump();
+            }
+            if (Input.GetAxis("Attack") == 1)
+            {
+                Attack();
+            }
+            if (Input.GetAxis("Special") == 1)
+            {
+                Special();
+            }
+            if (Input.GetAxis("Grab") == 1)
+            {
+                Grab();
+            }
         }
-        if(Input.GetAxis("Attack") == 1) {
-            Attack();
-        }
-        if(Input.GetAxis("Special") == 1) {
-            Special();
-        }
-        if(Input.GetAxis("Grab") == 1) {
-            Grab();
-        }
-
 #endif
     }
 
-    void MoveCharacter(Vector2 direction) {
+    [Client]
+    void MoveCharacter(Vector2 direction) { 
         Debug.Log(direction);
         playerController.SendMessage("InputMovement", Vector2.ClampMagnitude(direction, movementFactor));
     }
-    
+
+    [Client]
     void MoveLeft() {
         MoveCharacter(new Vector2(-1, 0));
     }
 
+    [Client]
     void MoveRight() {
         MoveCharacter(new Vector2(1, 0));
     }
 
+    [Client]
     void StopMoving() {
         MoveCharacter(Vector2.zero);
     }
 
+    [Client]
     void Attack() {
         Debug.Log("Attack");
         playerController.SendMessage("Attack");
     }
 
+    [Client]
     void Special() {
         Debug.Log("Special");
         playerController.SendMessage("Special");
     }
 
+    [Client]
     void StartJump() {
         Debug.Log("Jump");
         playerController.SendMessage("Jump", value: 1f);
     }
 
+    [Client]
     void StopJump() {
         Debug.Log("NoJump");
         playerController.SendMessage("Jump", value: 0f);
     }
 
+    [Client]
     void Grab() {
         Debug.Log("Grab");
         playerController.SendMessage("Grab");
     }
+
+    public void ConnectPlayer(PlayerController pc) {
+        if (pc.isLocalPlayer && playerController == null)
+            playerController = pc;
+    }
+
+    /*[Client]
+    public override void OnStartLocalPlayer() {
+        PlayerController[] list = FindObjectsOfType<PlayerController>();
+        foreach (PlayerController i in list)
+        {
+            if (i.isLocalPlayer)
+                playerController = i;
+        }
+    }*/
 
     //Vector3 Multiply(Vector3 a, Vector3 b) {
     //    Vector3 result = new Vector3();

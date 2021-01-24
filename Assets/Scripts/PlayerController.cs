@@ -3,36 +3,50 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using Mirror;
 
-public class PlayerController : MonoBehaviour  {
+public class PlayerController : NetworkBehaviour {
     [Range(1, 100)] public float accl = 10;
     public float max_speed = 10;
     [Range(1, 100)] public float jumpForce = 2;
     bool wasGrounded = false;
     
-    
     public Component groundTrigger;
     public LayerMask whatIsGround;
     
-    private float jump;
+    [SerializeField] private float jump;
 
     private Rigidbody2D body;
-    private Vector2 moveVelocity;
+    [SerializeField] private Vector2 moveVelocity;
     private bool isJumping = false;
 
+    [Client]
     void Start() {
+        Control[] list = FindObjectsOfType<Control>();
+        foreach (Control i in list)
+        {
+            i.ConnectPlayer(this);
+        }
+        //Control control = FindObjectOfType<Control>();
+        //if (control.playerController == null)
+        //control.playerController = this;
         body = this.gameObject.GetComponent<Rigidbody2D>();
     }
 
     void Update() { //update werte
         //jump = Input.GetAxis("Jump");
-        float moveHorizontal = Input.GetAxis("Horizontal");
+        //float moveHorizontal = Input.GetAxis("Horizontal");
         //Debug.Log(moveHorizontal);
         //moveVelocity = new Vector2(moveHorizontal, 0);
     }
 
+    [Client]
     void FixedUpdate() {//physics
         //----------------
+        if (!hasAuthority)
+        {
+            return;
+        }
         wasGrounded = false;
         Collider2D[] collders = Physics2D.OverlapCircleAll(groundTrigger.transform.position, .1F, whatIsGround);
         for (int i = 0; i < collders.Length; i++) {
