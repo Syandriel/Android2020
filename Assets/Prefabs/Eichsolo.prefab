@@ -141,6 +141,9 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 512
+  whatIsEnemy:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!1 &447142257770470868
 GameObject:
   m_ObjectHideFlags: 0
