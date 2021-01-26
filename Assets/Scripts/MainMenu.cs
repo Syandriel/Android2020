@@ -15,6 +15,7 @@ public class MainMenu: MonoBehaviour
     }
 
     public void HostMultiplayer() {
+        SceneManager.LoadScene("DeathScreen");
         Debug.Log("Hosting Multiplayer...");
     }
 
