@@ -9,21 +9,27 @@ public class PlayerController : MonoBehaviour  {
     [Range(1, 100)] public float accl = 10;
     public float max_speed = 10;
     [Range(1, 100)] public float jumpForce = 2;
-    
+    public float maxY_speed = 10;
     
     public Component groundTrigger;
     public LayerMask whatIsGround;
     public LayerMask whatIsEnemy;
-    
+    public Component rightWallTrigger;
+    public Component leftWallTrigger;
     private float jump;
 
     private Rigidbody2D body;
     private CapsuleCollider2D collision;
     private Vector2 moveVelocity;
     private bool wasGrounded = false;
+    private bool leftWalled = false;
+    private bool rightWalled = false;
     private bool wasHurt = false;
     private bool isJumping = false;
-    private bool oneJump = true;
+    private int oneJump = 0;
+    private int framecounter = 0;
+    private bool startCounting = false;
+
 
     void Start() {
         body = this.gameObject.GetComponent<Rigidbody2D>();
@@ -59,18 +65,41 @@ public class PlayerController : MonoBehaviour  {
                 Debug.Log("AAAAAAAHHHHHHHH");
             }
         }
-        
-        if((jump == 1) && (wasGrounded || (!wasGrounded && notMoving()&&oneJump))){
-            if (!wasGrounded && notMoving()) { //walljump
 
-                float xcord = body.position.x;
-                body.AddForce(new Vector2(100*jumpForce, 50 * jumpForce));
-                if (body.position.x.Equals(xcord)) {
-                    body.AddForce(new Vector2(-100*jumpForce, 50 * jumpForce));
+        leftWalled = false;
+        Collider2D[] leftWallColliders = Physics2D.OverlapCircleAll(leftWallTrigger.transform.position, .1F, whatIsGround);
+        for (int i = 0; i < leftWallColliders.Length; i++) {
+            if (leftWallColliders[i].gameObject != gameObject) {
+                leftWalled = true;
+            }
+        }
+        
+        
+        rightWalled = false;
+        Collider2D[] rightWallColliders = Physics2D.OverlapCircleAll(rightWallTrigger.transform.position, .1F, whatIsGround);
+        for (int i = 0; i < rightWallColliders.Length; i++) {
+            if (rightWallColliders[i].gameObject != gameObject) {
+                rightWalled = true;
+            }
+        }
+
+        bool jumpung = false;
+        
+        
+        if((jump == 1 && wasGrounded) || (jump == 1 && !wasGrounded && (leftWalled || rightWalled)&& (oneJump<1))) {
+            if (!wasGrounded) { //walljump
+                if (leftWalled) {
+                    body.AddForce(new Vector2(100*jumpForce, 100 * jumpForce));
                 }
-                oneJump = false;
+
+                if (rightWalled) {
+                    body.AddForce(new Vector2(-100*jumpForce, 100 * jumpForce));
+                }
+
+                jumpung = true;
+                oneJump++;
             } else { 
-                body.AddForce(new Vector2(0, 100 * jumpForce));  
+                body.AddForce(new Vector2(0, 100 * jumpForce));
             }
         }
         //--------------
@@ -82,12 +111,17 @@ public class PlayerController : MonoBehaviour  {
             moveX = max_speed;
         }
 
+       // bool sign = moveY > 0;
+
+       // moveY = Mathf.Min(Mathf.Abs(moveY), maxY_speed);
+        
+
         if (wasGrounded)
-            oneJump = true;
+            oneJump = 0;
         
-        
-        //if (wasGrounded)
+        if (!jumpung)
             body.velocity = new Vector2(moveX * accl*10, moveY);
+        //*(sign?1:-1)
     }
 
     void InputMovement(Vector2 movement) {
