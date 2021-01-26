@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Multiplayer : MonoBehaviour
+public class MainMenu: MonoBehaviour
 {
     public void StartSinglePlayer() {
         SceneManager.LoadScene(1);
