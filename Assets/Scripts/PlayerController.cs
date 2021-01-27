@@ -6,11 +6,14 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//Controller for controlling the singleplayer character
 public class PlayerController : MonoBehaviour  {
     [Range(1, 100)] public float accl = 10;
     public float max_speed = 10;
     [Range(1, 100)] public float jumpForce = 2;
     public float maxY_speed = 10;
+
+    [Space]
     
     public BoxCollider2D groundTrigger;
     public Component rightWallTrigger;
@@ -27,11 +30,8 @@ public class PlayerController : MonoBehaviour  {
     private bool wasGrounded = false;
     private bool leftWalled = false;
     private bool rightWalled = false;
-    private bool wasHurt = false;
-    private bool isJumping = false;
+    private bool wasHurt = false; //not currently used, necesary if more player lives are implemented
     private int oneJump = 0;
-    private int framecounter = 0;
-    private bool startCounting = false;
     private bool facingRight = true;
 
 
@@ -40,19 +40,9 @@ public class PlayerController : MonoBehaviour  {
         collision = this.gameObject.GetComponent<CapsuleCollider2D>();
         animator = this.gameObject.GetComponent<Animator>();
     }
-
-    void Update() { //update werte
-
-    }
-
-
-    private bool notMoving() {
-        return (body.velocity.y == 0 && body.velocity.x == 0);
-    }
     
-    
-    void FixedUpdate() {//physics
-        //----------------
+    void FixedUpdate() {
+        //Check if the player is on the ground this frame
         wasGrounded = false;
         Collider2D[] groundColliders = Physics2D.OverlapBoxAll(groundTrigger.transform.position, groundTrigger.size, 0f, whatIsGround);
         for (int i = 0; i < groundColliders.Length; i++) {
@@ -61,15 +51,17 @@ public class PlayerController : MonoBehaviour  {
             }
         }
 
+        //Check if the player is colliding with an enemy and show the death screen accordingly
         Collider2D[] enemyColliders = Physics2D.OverlapCapsuleAll(collision.transform.position, collision.size, collision.direction, 0, whatIsEnemy);
         for (int i = 0; i < enemyColliders.Length; i++) {
             if(enemyColliders[i].gameObject != gameObject) {
-                wasHurt = true; //Falls mehrere Leben implementiert wird.
+                wasHurt = true; //If more lives are implemented
                 Debug.Log("AAAAAAAAAH");
                 SceneManager.LoadScene("DeathScreen");
             }
         }
 
+        //Check if the player is colliding with a wall to his left
         leftWalled = false;
         Collider2D[] leftWallColliders = Physics2D.OverlapCircleAll(leftWallTrigger.transform.position, .1F, whatIsGround);
         for (int i = 0; i < leftWallColliders.Length; i++) {
@@ -77,7 +69,8 @@ public class PlayerController : MonoBehaviour  {
                 leftWalled = true;
             }
         }
-        
+
+        //Check if the player is colliding with a wall to his right
         rightWalled = false;
         Collider2D[] rightWallColliders = Physics2D.OverlapCircleAll(rightWallTrigger.transform.position, .1F, whatIsGround);
         for (int i = 0; i < rightWallColliders.Length; i++) {
@@ -86,6 +79,7 @@ public class PlayerController : MonoBehaviour  {
             }
         }
 
+        //Check if the player is colliding with a wall to his right
         bool jumping = false;
         if((jump == 1 && wasGrounded) || (jump == 1 && !wasGrounded && (leftWalled || rightWalled)&& (oneJump<1))) {
             if (!wasGrounded) { //walljump
@@ -103,8 +97,8 @@ public class PlayerController : MonoBehaviour  {
                 body.AddForce(new Vector2(0, 100 * jumpForce));
             }
         }
-        //--------------
 
+        //Check if the player is colliding with a wall to his right
         float moveX = moveVelocity.x /10;
         float moveY = body.velocity.y;
 
@@ -119,6 +113,7 @@ public class PlayerController : MonoBehaviour  {
         if (!jumping)
             body.velocity = new Vector2(moveX * accl*10, moveY);
 
+        //Check if the player is colliding with a wall to his right
         animator.SetFloat("Speed", Mathf.Abs(body.velocity.x));
         animator.SetBool("IsJumping", !wasGrounded);
 
@@ -131,29 +126,19 @@ public class PlayerController : MonoBehaviour  {
         }
     }
 
+    //Recieving Method for player movement, from Control.cs
     void InputMovement(Vector2 movement) {
         moveVelocity = movement;
     }
 
-    void Attack() {
-        //Debug.Log("Attack in PlayerController");
-    }
-
-    void Special() {
-
-        //Debug.Log("Special in PlayerController");
-    }
-
-    void Grab() {
-        //Debug.Log("Grab in PlayerController");
-    }
-
+    //Recieving Method for jumping, from Control.cs
     void Jump(float value) {
         Debug.Log("Jump: " + value);
         Debug.Log("was Grounded: " + wasGrounded);
         jump = value;
     }
 
+    //Switch the playerfacing, eg. from left to right and vice-versa
     void SwitchFacing() {
         facingRight = !facingRight;
 

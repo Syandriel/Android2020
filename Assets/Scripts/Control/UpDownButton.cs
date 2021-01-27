@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 
+//Helper Class to add a button with events for ButtonDown and ButtonUp
 [AddComponentMenu("UI/UpDownButton", 30)]
 public class UpDownButton : Selectable, IPointerDownHandler, IPointerUpHandler {
 
@@ -50,7 +51,7 @@ public class UpDownButton : Selectable, IPointerDownHandler, IPointerUpHandler {
         if (!IsActive() || !IsInteractable())
             return;
 
-        UISystemProfilerApi.AddMarker("UpDownButton.opPointerUp", this);
+        UISystemProfilerApi.AddMarker("UpDownButton.onPointerUp", this);
         m_OnButtonUp.Invoke();
 
     }
