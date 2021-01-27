@@ -85846,21 +85846,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 447142257068531645, guid: 2a40e28b0b1ff2343b923e695b541fd8,
-        type: 3}
-      propertyPath: whatIsEnemy.m_Bits
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 447142257068531645, guid: 2a40e28b0b1ff2343b923e695b541fd8,
-        type: 3}
-      propertyPath: maxY_speed
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 447142257068531645, guid: 2a40e28b0b1ff2343b923e695b541fd8,
-        type: 3}
-      propertyPath: jumpForce
-      value: 14
-      objectReference: {fileID: 0}
     - target: {fileID: 447142257068531648, guid: 2a40e28b0b1ff2343b923e695b541fd8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -85916,20 +85901,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 447142257068531648, guid: 2a40e28b0b1ff2343b923e695b541fd8,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.64063025
-      objectReference: {fileID: 0}
-    - target: {fileID: 447142257068531648, guid: 2a40e28b0b1ff2343b923e695b541fd8,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.62324715
-      objectReference: {fileID: 0}
     - target: {fileID: 447142257068531650, guid: 2a40e28b0b1ff2343b923e695b541fd8,
         type: 3}
       propertyPath: m_Name
-      value: Eichsolo
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a40e28b0b1ff2343b923e695b541fd8, type: 3}

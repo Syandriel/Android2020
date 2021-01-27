@@ -146,7 +146,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5380516565781526920}
   - component: {fileID: 5380516565781526921}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MovingSaw
   m_TagString: Untagged
   m_Icon: {fileID: 0}

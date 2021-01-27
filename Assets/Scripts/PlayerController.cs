@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour  {
     [Range(1, 100)] public float accl = 10;
@@ -11,15 +12,17 @@ public class PlayerController : MonoBehaviour  {
     [Range(1, 100)] public float jumpForce = 2;
     public float maxY_speed = 10;
     
-    public Component groundTrigger;
-    public LayerMask whatIsGround;
-    public LayerMask whatIsEnemy;
+    public BoxCollider2D groundTrigger;
     public Component rightWallTrigger;
     public Component leftWallTrigger;
+    public LayerMask whatIsGround;
+    public LayerMask whatIsEnemy;
+    public LayerMask whatIsLevelEnd;
     private float jump;
 
     private Rigidbody2D body;
     private CapsuleCollider2D collision;
+    private Animator animator;
     private Vector2 moveVelocity;
     private bool wasGrounded = false;
     private bool leftWalled = false;
@@ -29,18 +32,17 @@ public class PlayerController : MonoBehaviour  {
     private int oneJump = 0;
     private int framecounter = 0;
     private bool startCounting = false;
+    private bool facingRight = true;
 
 
     void Start() {
         body = this.gameObject.GetComponent<Rigidbody2D>();
         collision = this.gameObject.GetComponent<CapsuleCollider2D>();
+        animator = this.gameObject.GetComponent<Animator>();
     }
 
     void Update() { //update werte
-        //jump = Input.GetAxis("Jump");
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        //Debug.Log(moveHorizontal);
-        //moveVelocity = new Vector2(moveHorizontal, 0);
+
     }
 
 
@@ -52,17 +54,19 @@ public class PlayerController : MonoBehaviour  {
     void FixedUpdate() {//physics
         //----------------
         wasGrounded = false;
-        Collider2D[] groundColliders = Physics2D.OverlapCircleAll(groundTrigger.transform.position, .1F, whatIsGround);
+        Collider2D[] groundColliders = Physics2D.OverlapBoxAll(groundTrigger.transform.position, groundTrigger.size, 0f, whatIsGround);
         for (int i = 0; i < groundColliders.Length; i++) {
             if (groundColliders[i].gameObject != gameObject) {
                 wasGrounded = true;
             }
         }
+
         Collider2D[] enemyColliders = Physics2D.OverlapCapsuleAll(collision.transform.position, collision.size, collision.direction, 0, whatIsEnemy);
         for (int i = 0; i < enemyColliders.Length; i++) {
             if(enemyColliders[i].gameObject != gameObject) {
-                wasHurt = true;
-                Debug.Log("AAAAAAAHHHHHHHH");
+                wasHurt = true; //Falls mehrere Leben implementiert wird.
+                Debug.Log("AAAAAAAAAH");
+                SceneManager.LoadScene("DeathScreen");
             }
         }
 
@@ -74,7 +78,6 @@ public class PlayerController : MonoBehaviour  {
             }
         }
         
-        
         rightWalled = false;
         Collider2D[] rightWallColliders = Physics2D.OverlapCircleAll(rightWallTrigger.transform.position, .1F, whatIsGround);
         for (int i = 0; i < rightWallColliders.Length; i++) {
@@ -83,9 +86,7 @@ public class PlayerController : MonoBehaviour  {
             }
         }
 
-        bool jumpung = false;
-        
-        
+        bool jumping = false;
         if((jump == 1 && wasGrounded) || (jump == 1 && !wasGrounded && (leftWalled || rightWalled)&& (oneJump<1))) {
             if (!wasGrounded) { //walljump
                 if (leftWalled) {
@@ -96,9 +97,9 @@ public class PlayerController : MonoBehaviour  {
                     body.AddForce(new Vector2(-100*jumpForce, 100 * jumpForce));
                 }
 
-                jumpung = true;
+                jumping = true;
                 oneJump++;
-            } else { 
+            } else { //normal jump
                 body.AddForce(new Vector2(0, 100 * jumpForce));
             }
         }
@@ -107,21 +108,27 @@ public class PlayerController : MonoBehaviour  {
         float moveX = moveVelocity.x /10;
         float moveY = body.velocity.y;
 
-        if (moveX > max_speed) {
-            moveX = max_speed;
-        }
-
-       // bool sign = moveY > 0;
-
-       // moveY = Mathf.Min(Mathf.Abs(moveY), maxY_speed);
-        
+        if (moveX > 0 && !facingRight)
+            SwitchFacing();
+        else if (moveX < 0 && facingRight)
+            SwitchFacing();
 
         if (wasGrounded)
             oneJump = 0;
         
-        if (!jumpung)
+        if (!jumping)
             body.velocity = new Vector2(moveX * accl*10, moveY);
-        //*(sign?1:-1)
+
+        animator.SetFloat("Speed", Mathf.Abs(body.velocity.x));
+        animator.SetBool("IsJumping", !wasGrounded);
+
+        //Detect if player is at the end of the level
+        Collider2D[] endLevelColliders = Physics2D.OverlapCapsuleAll(collision.transform.position, collision.size, collision.direction, 0, whatIsLevelEnd);
+        for (int i = 0; i < endLevelColliders.Length; i++) {
+            if (endLevelColliders[i].gameObject != gameObject) {
+                SceneManager.LoadScene("LevelTransition");
+            }
+        }
     }
 
     void InputMovement(Vector2 movement) {
@@ -145,6 +152,15 @@ public class PlayerController : MonoBehaviour  {
         Debug.Log("Jump: " + value);
         Debug.Log("was Grounded: " + wasGrounded);
         jump = value;
+    }
+
+    void SwitchFacing() {
+        facingRight = !facingRight;
+
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
+
     }
 
 }
