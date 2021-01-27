@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Mirror;
 
 public class MainMenu: MonoBehaviour
 {
@@ -15,11 +16,13 @@ public class MainMenu: MonoBehaviour
     }
 
     public void HostMultiplayer() {
+        
         SceneManager.LoadScene("DeathScreen");
         Debug.Log("Hosting Multiplayer...");
     }
 
     public void JoinLocalMultiplayer() {
+        
         Debug.Log("Joining Multiplayer...");
     }
 

@@ -5,8 +5,9 @@ using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Mirror;
 
-public class MultiplayerController : MonoBehaviour  {
+public class MultiplayerController : NetworkBehaviour  {
     [Range(1, 100)] public float accl = 10;
     public float max_speed = 10;
     [Range(1, 100)] public float jumpForce = 2;
@@ -18,12 +19,12 @@ public class MultiplayerController : MonoBehaviour  {
     public LayerMask whatIsGround;
     public LayerMask whatIsEnemy;
     public LayerMask whatIsLevelEnd;
-    private float jump;
+    [SerializeField]private float jump;
 
     private Rigidbody2D body;
     private CapsuleCollider2D collision;
     private Animator animator;
-    private Vector2 moveVelocity;
+    [SerializeField]private Vector2 moveVelocity;
     private bool wasGrounded = false;
     private bool leftWalled = false;
     private bool rightWalled = false;
@@ -34,11 +35,15 @@ public class MultiplayerController : MonoBehaviour  {
     private bool startCounting = false;
     private bool facingRight = true;
 
-
+    [Client]
     void Start() {
         body = this.gameObject.GetComponent<Rigidbody2D>();
         collision = this.gameObject.GetComponent<CapsuleCollider2D>();
         animator = this.gameObject.GetComponent<Animator>();
+        MultiplayerControl[] list = FindObjectsOfType<MultiplayerControl>();
+        foreach(MultiplayerControl control in list) {
+            control.ConnectPlayer(this);
+        }
     }
 
     void Update() { //update werte
@@ -50,9 +55,12 @@ public class MultiplayerController : MonoBehaviour  {
         return (body.velocity.y == 0 && body.velocity.x == 0);
     }
     
-    
+    [Client]
     void FixedUpdate() {//physics
-        //----------------
+
+        if (!hasAuthority)
+            return;
+
         wasGrounded = false;
         Collider2D[] groundColliders = Physics2D.OverlapBoxAll(groundTrigger.transform.position, groundTrigger.size, 0f, whatIsGround);
         for (int i = 0; i < groundColliders.Length; i++) {

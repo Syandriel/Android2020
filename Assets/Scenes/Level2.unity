@@ -86050,6 +86050,51 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 3207985078591574217, guid: 961c8ea411a19f24591d6cc0ed13aafe,
+        type: 3}
+      propertyPath: control
+      value: 
+      objectReference: {fileID: 1608671390}
+    - target: {fileID: 3207985078591574217, guid: 961c8ea411a19f24591d6cc0ed13aafe,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1114977343}
+    - target: {fileID: 3207985078591574217, guid: 961c8ea411a19f24591d6cc0ed13aafe,
+        type: 3}
+      propertyPath: playerController
+      value: 
+      objectReference: {fileID: 1114977346}
+    - target: {fileID: 3207985078591574217, guid: 961c8ea411a19f24591d6cc0ed13aafe,
+        type: 3}
+      propertyPath: attack
+      value: 
+      objectReference: {fileID: 1229731605}
+    - target: {fileID: 3207985078591574217, guid: 961c8ea411a19f24591d6cc0ed13aafe,
+        type: 3}
+      propertyPath: special
+      value: 
+      objectReference: {fileID: 919818183}
+    - target: {fileID: 3207985078591574217, guid: 961c8ea411a19f24591d6cc0ed13aafe,
+        type: 3}
+      propertyPath: jump
+      value: 
+      objectReference: {fileID: 1547494152}
+    - target: {fileID: 3207985078591574217, guid: 961c8ea411a19f24591d6cc0ed13aafe,
+        type: 3}
+      propertyPath: grab
+      value: 
+      objectReference: {fileID: 648794963}
+    - target: {fileID: 3207985078591574217, guid: 961c8ea411a19f24591d6cc0ed13aafe,
+        type: 3}
+      propertyPath: left
+      value: 
+      objectReference: {fileID: 4254969871012086367}
+    - target: {fileID: 3207985078591574217, guid: 961c8ea411a19f24591d6cc0ed13aafe,
+        type: 3}
+      propertyPath: right
+      value: 
+      objectReference: {fileID: 4254969871012086366}
     - target: {fileID: 7949393685749992409, guid: 961c8ea411a19f24591d6cc0ed13aafe,
         type: 3}
       propertyPath: target
