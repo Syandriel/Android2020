@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SimpleMovingEnemy : MonoBehaviour
-{
+//Script for handeling the movement of an enemy
+public class SimpleMovingEnemy : MonoBehaviour {
 
     public Transform enemy;
 
@@ -22,23 +22,14 @@ public class SimpleMovingEnemy : MonoBehaviour
     private float lerpDistance;
     private bool goingRight;
 
-    private 
-
-    // Start is called before the first frame update
-    void Start()
-    {
+    //Setup variables needed at start
+    void Start() {
         center = enemy.position;
         lerpDistance = lerpStart;
-        //For Debuging
-        leftAnchor.localPosition = leftOffset;
-        rightAnchor.localPosition = rightOffset;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        Vector2 leftSide = leftAnchor.position;
-        Vector2 rightSide = rightAnchor.position;
+    //Move the enemy continous on a linear path back and forth
+    void Update() {
 
         Vector2 lerpedPosition = Vector2.Lerp(center + leftOffset, center + rightOffset, lerpDistance);
         enemy.position = lerpedPosition;
@@ -56,6 +47,9 @@ public class SimpleMovingEnemy : MonoBehaviour
             }
         }
 
+        //For Debug
+        leftAnchor.localPosition = leftOffset;
+        rightAnchor.localPosition = rightOffset;
         Debug.DrawLine(leftAnchor.position, rightAnchor.position, Color.red);
     }
 }
