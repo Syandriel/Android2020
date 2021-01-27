@@ -163,6 +163,8 @@ public class Control : NetworkBehaviour {
         playerController.SendMessage("Grab");
     }
 
+    //wird von MultiplayerPlayerController aufgerufen wenn eine Verbindung zu einem Server aufgebaut wird
+    //Setzt diesen als playerController falls keiner automatisch gesetzt werden konnte
     public void ConnectPlayer(PlayerController pc) {
         if (pc.isLocalPlayer && playerController == null)
             playerController = pc;
