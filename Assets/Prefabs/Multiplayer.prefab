@@ -159,9 +159,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c27912c79cdd234aae20d48e2554ee8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  accl: 10
+  syncMode: 0
+  syncInterval: 0.1
+  accl: 69
   max_speed: 10
-  jumpForce: 2
+  jumpForce: 14
   maxY_speed: 10
   groundTrigger: {fileID: 8256459981542603925}
   rightWallTrigger: {fileID: 2810657213774346611}
@@ -175,6 +177,8 @@ MonoBehaviour:
   whatIsLevelEnd:
     serializedVersion: 2
     m_Bits: 2048
+  jump: 0
+  moveVelocity: {x: 0, y: 0}
 --- !u!114 &4750291279638457246
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -161,4 +161,8 @@ public class MultiplayerController : NetworkBehaviour  {
 
     }
 
+    public Rigidbody2D GetBody() {
+        return body;
+    }
+
 }

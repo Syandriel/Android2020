@@ -20,8 +20,6 @@ public class MultiplayerControl : NetworkBehaviour {
     [Range(0.1f, 1)]
     public float movementFactor = 0.198f;
 
-    [SerializeField] private Text debugText;
-
     // Start is called before the first frame update
     [Client]
     void Start() {
@@ -46,8 +44,6 @@ public class MultiplayerControl : NetworkBehaviour {
 
     [Client]
     void FixedUpdate() {
-        if (playerController != null)
-            debugText.text = playerController.ToString();
 #if (!(UNITY_ANDROID || UNITY_IOS)) //PC control
         if (playerController != null) {
             MoveCharacter(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
